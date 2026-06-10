@@ -241,3 +241,6 @@ A Power BI dashboard file is included in the repository:
 - MunichRetailDashboard.pbix
 
 The dashboard connects to the PostgreSQL warehouse and provides example retail analytics visualizations.
+
+## Improvments made:
+- Suspicious transactions are flagged into a separate `data_quality_issues` table for review without deleting source records.

@@ -30,11 +30,36 @@ df["product_department"] = df["product_department"].fillna("Unknown")
 df["promotion_id"] = df["promotion_id"].fillna(0)
 df["promotion_name"] = df["promotion_name"].fillna("No Promotion")
 
+# Fill missing numeric values
 df["quantity"] = df["quantity"].fillna(0)
-df["unit_price"] = df["unit_price"].fillna(df["base_price"])
-df["total_amount"] = df["total_amount"].fillna(
-    df["quantity"] * df["unit_price"] - df["discount_applied"]
+
+# If unit_price is missing, derive it from base_price and discount_rate.
+# Existing unit_price values are preserved.
+df["unit_price"] = df["unit_price"].fillna(
+    df["base_price"] * (1 - df["discount_rate"])
 )
+
+# If total_amount is missing, derive it from quantity and unit_price.
+# Existing total_amount values are preserved.
+df["total_amount"] = df["total_amount"].fillna(
+    df["quantity"] * df["unit_price"]
+)
+
+# -----------------------------
+# DATA QUALITY VALIDATION
+# -----------------------------
+df["calculated_total_amount"] = df["quantity"] * df["unit_price"]
+
+suspicious_rows = df[
+    (df["quantity"] < 0) |
+    (df["quantity"] > 1000) |
+    (df["unit_price"] < -1000) |
+    (df["unit_price"] > 10000) |
+    (df["total_amount"].abs() > 10000)
+].copy()
+
+print(f"Suspicious rows found: {len(suspicious_rows)}")
+
 # -----------------------------
 # STANDARDIZE ID TYPES
 # -----------------------------
@@ -50,6 +75,7 @@ id_columns = [
 for col in id_columns:
     df[col] = df[col].astype("Int64").astype(str)
     df[col] = df[col].replace("<NA>", None)
+
 # -----------------------------
 # TRANSFORM: STANDARDIZE TEXT
 # -----------------------------
@@ -94,6 +120,15 @@ with engine.connect() as conn:
     conn.commit()
 
 print("Schema created.")
+
+suspicious_rows.to_sql(
+    "data_quality_issues",
+    engine,
+    if_exists="replace",
+    index=False
+)
+
+print("Data quality issues table loaded.")
 
 # -----------------------------
 # CREATE DIMENSION TABLES
@@ -193,7 +228,6 @@ print("Dimensions loaded.")
 # -----------------------------
 # READ BACK SURROGATE KEYS
 # -----------------------------
-date_keys = pd.read_sql("SELECT date_key, full_date FROM dim_date", engine)
 store_keys = pd.read_sql("SELECT store_key, store_id FROM dim_store", engine)
 customer_keys = pd.read_sql("SELECT customer_key, customer_id FROM dim_customer", engine)
 product_keys = pd.read_sql("SELECT product_key, product_id FROM dim_product", engine)
@@ -210,41 +244,12 @@ fact_sales["date_key"] = fact_sales["transaction_date"].apply(
     lambda x: int(pd.to_datetime(x).strftime("%Y%m%d"))
 )
 
-fact_sales = fact_sales.merge(
-    store_keys,
-    on="store_id",
-    how="left"
-)
-
-fact_sales = fact_sales.merge(
-    customer_keys,
-    on="customer_id",
-    how="left"
-)
-
-fact_sales = fact_sales.merge(
-    product_keys,
-    on="product_id",
-    how="left"
-)
-
-fact_sales = fact_sales.merge(
-    supplier_keys,
-    on="supplier_id",
-    how="left"
-)
-
-fact_sales = fact_sales.merge(
-    staff_keys,
-    on="sales_staff_id",
-    how="left"
-)
-
-fact_sales = fact_sales.merge(
-    promotion_keys,
-    on="promotion_id",
-    how="left"
-)
+fact_sales = fact_sales.merge(store_keys, on="store_id", how="left")
+fact_sales = fact_sales.merge(customer_keys, on="customer_id", how="left")
+fact_sales = fact_sales.merge(product_keys, on="product_id", how="left")
+fact_sales = fact_sales.merge(supplier_keys, on="supplier_id", how="left")
+fact_sales = fact_sales.merge(staff_keys, on="sales_staff_id", how="left")
+fact_sales = fact_sales.merge(promotion_keys, on="promotion_id", how="left")
 
 fact_sales = fact_sales[
     [
