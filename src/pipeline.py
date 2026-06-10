@@ -1,15 +1,24 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
+import logging
+pd.set_option('future.no_silent_downcasting', True)
 
 # Database connection
 DB_URL = "postgresql://oliva:oliva@localhost:5432/retail_dw"
 engine = create_engine(DB_URL)
+logging.basicConfig(
+    filename="etl.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
+logging.info("ETL pipeline started")
 # -----------------------------
 # EXTRACT
 # -----------------------------
 df = pd.read_csv("data/munich_retail_sales_raw.csv")
 print("CSV loaded successfully.")
+logging.info("CSV loaded successfully.")
 
 # -----------------------------
 # TRANSFORM: BASIC CLEANING
@@ -23,8 +32,11 @@ df["transaction_date"] = pd.to_datetime(
 )
 
 df = df.dropna(subset=["transaction_date"])
-
-df["discount_applied"] = df["discount_applied"].fillna(False)
+df["discount_applied"] = (
+    df["discount_applied"]
+    .fillna(False)
+    .infer_objects(copy=False)
+)
 df["customer_loyalty_status"] = df["customer_loyalty_status"].fillna("Unknown")
 df["product_department"] = df["product_department"].fillna("Unknown")
 df["promotion_id"] = df["promotion_id"].fillna(0)
@@ -59,7 +71,7 @@ suspicious_rows = df[
 ].copy()
 
 print(f"Suspicious rows found: {len(suspicious_rows)}")
-
+logging.info("Suspicious rows found: {len(suspicious_rows)}")
 # -----------------------------
 # STANDARDIZE ID TYPES
 # -----------------------------
@@ -108,7 +120,7 @@ df["product_brand"] = df["product_brand"].str.upper()
 df["customer_loyalty_status"] = df["customer_loyalty_status"].str.upper()
 
 print("Data cleaned.")
-
+logging.info("Data cleaned.")
 # -----------------------------
 # LOAD: CREATE SCHEMA
 # -----------------------------
@@ -120,7 +132,7 @@ with engine.connect() as conn:
     conn.commit()
 
 print("Schema created.")
-
+logging.info("Schema created")
 suspicious_rows.to_sql(
     "data_quality_issues",
     engine,
@@ -129,7 +141,7 @@ suspicious_rows.to_sql(
 )
 
 print("Data quality issues table loaded.")
-
+logging.info("Data quality issues table loaded.")
 # -----------------------------
 # CREATE DIMENSION TABLES
 # -----------------------------
@@ -211,7 +223,7 @@ dim_promotion = df[
 ].drop_duplicates(subset=["promotion_id"])
 
 print("Dimension tables created.")
-
+logging.info("Dimension tables created.")
 # -----------------------------
 # LOAD DIMENSIONS
 # -----------------------------
@@ -224,7 +236,7 @@ dim_sales_staff.to_sql("dim_sales_staff", engine, if_exists="append", index=Fals
 dim_promotion.to_sql("dim_promotion", engine, if_exists="append", index=False)
 
 print("Dimensions loaded.")
-
+logging.info("Dimensions loaded.")
 # -----------------------------
 # READ BACK SURROGATE KEYS
 # -----------------------------
@@ -287,4 +299,6 @@ fact_sales.to_sql(
 )
 
 print("Fact table loaded.")
+logging.info("Fact table loaded.")
 print("ETL pipeline completed successfully.")
+logging.info("ETL pipeline completed successfully.")

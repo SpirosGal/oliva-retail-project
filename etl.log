@@ -1,0 +1,60 @@
+2026-06-10 21:39:21,266 - INFO - ETL pipeline started
+2026-06-10 21:39:21,467 - INFO - CSV loaded successfully.
+2026-06-10 21:39:21,557 - INFO - Suspicious rows found: {len(suspicious_rows)}
+2026-06-10 21:39:21,749 - INFO - Data cleaned.
+2026-06-10 21:39:21,853 - INFO - Schema created
+2026-06-10 21:39:21,980 - INFO - Data quality issues table loaded.
+2026-06-10 21:39:22,008 - INFO - Dimension tables created.
+2026-06-10 21:39:22,049 - INFO - Dimensions loaded.
+2026-06-10 21:39:25,359 - INFO - Fact table loaded.
+2026-06-10 21:39:25,359 - INFO - ETL pipeline completed successfully.
+2026-06-10 21:40:37,468 - INFO - ETL pipeline started
+2026-06-10 21:40:37,656 - INFO - CSV loaded successfully.
+2026-06-10 21:40:37,734 - INFO - Suspicious rows found: {len(suspicious_rows)}
+2026-06-10 21:40:37,922 - INFO - Data cleaned.
+2026-06-10 21:40:37,992 - INFO - Schema created
+2026-06-10 21:40:38,098 - INFO - Data quality issues table loaded.
+2026-06-10 21:40:38,126 - INFO - Dimension tables created.
+2026-06-10 21:40:38,165 - INFO - Dimensions loaded.
+2026-06-10 21:40:41,452 - INFO - Fact table loaded.
+2026-06-10 21:40:41,452 - INFO - ETL pipeline completed successfully.
+2026-06-10 21:43:50,601 - INFO - ETL pipeline started
+2026-06-10 21:43:50,767 - INFO - CSV loaded successfully.
+2026-06-10 21:43:50,841 - INFO - Suspicious rows found: {len(suspicious_rows)}
+2026-06-10 21:43:51,029 - INFO - Data cleaned.
+2026-06-10 21:43:51,089 - INFO - Schema created
+2026-06-10 21:43:51,192 - INFO - Data quality issues table loaded.
+2026-06-10 21:43:51,218 - INFO - Dimension tables created.
+2026-06-10 21:43:51,258 - INFO - Dimensions loaded.
+2026-06-10 21:43:54,389 - INFO - Fact table loaded.
+2026-06-10 21:43:54,389 - INFO - ETL pipeline completed successfully.
+2026-06-10 21:50:54,757 - INFO - ETL pipeline started
+2026-06-10 21:50:54,974 - INFO - CSV loaded successfully.
+2026-06-10 21:50:55,089 - INFO - Suspicious rows found: {len(suspicious_rows)}
+2026-06-10 21:50:55,292 - INFO - Data cleaned.
+2026-06-10 21:50:55,403 - INFO - Schema created
+2026-06-10 21:50:55,572 - INFO - Data quality issues table loaded.
+2026-06-10 21:50:55,610 - INFO - Dimension tables created.
+2026-06-10 21:50:55,658 - INFO - Dimensions loaded.
+2026-06-10 21:50:59,361 - INFO - Fact table loaded.
+2026-06-10 21:50:59,362 - INFO - ETL pipeline completed successfully.
+2026-06-10 21:52:01,835 - INFO - ETL pipeline started
+2026-06-10 21:52:02,037 - INFO - CSV loaded successfully.
+2026-06-10 21:52:02,161 - INFO - Suspicious rows found: {len(suspicious_rows)}
+2026-06-10 21:52:02,372 - INFO - Data cleaned.
+2026-06-10 21:52:02,446 - INFO - Schema created
+2026-06-10 21:52:02,568 - INFO - Data quality issues table loaded.
+2026-06-10 21:52:02,602 - INFO - Dimension tables created.
+2026-06-10 21:52:02,832 - INFO - Dimensions loaded.
+2026-06-10 21:52:06,497 - INFO - Fact table loaded.
+2026-06-10 21:52:06,497 - INFO - ETL pipeline completed successfully.
+2026-06-10 21:53:17,782 - INFO - ETL pipeline started
+2026-06-10 21:53:18,014 - INFO - CSV loaded successfully.
+2026-06-10 21:53:18,136 - INFO - Suspicious rows found: {len(suspicious_rows)}
+2026-06-10 21:53:18,332 - INFO - Data cleaned.
+2026-06-10 21:53:18,413 - INFO - Schema created
+2026-06-10 21:53:18,543 - INFO - Data quality issues table loaded.
+2026-06-10 21:53:18,576 - INFO - Dimension tables created.
+2026-06-10 21:53:18,624 - INFO - Dimensions loaded.
+2026-06-10 21:53:22,207 - INFO - Fact table loaded.
+2026-06-10 21:53:22,207 - INFO - ETL pipeline completed successfully.

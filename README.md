@@ -178,7 +178,22 @@ The following transformations were applied:
 - Surrogate key generation
 
 ---
+## Logging
 
+The ETL pipeline includes basic logging.
+
+Pipeline execution steps are written to an `etl.log` file, including:
+
+- pipeline start
+- CSV loading
+- data cleaning
+- schema creation
+- dimension loading
+- fact table loading
+- pipeline completion
+
+This improves traceability and makes troubleshooting easier.
+---
 ## Assumptions
 
 The following assumptions were made during implementation:
@@ -242,5 +257,14 @@ A Power BI dashboard file is included in the repository:
 
 The dashboard connects to the PostgreSQL warehouse and provides example retail analytics visualizations.
 
-## Improvments made:
-- Suspicious transactions are flagged into a separate `data_quality_issues` table for review without deleting source records.
+### Data Quality Validation
+
+The ETL pipeline includes a simple data quality validation layer.
+
+Suspicious records are identified based on configurable business rules such as:
+
+- unusually large quantities
+- extreme unit prices
+- unusually large transaction amounts
+
+These records are loaded into a separate `data_quality_issues` table for review while preserving source transactional integrity.
